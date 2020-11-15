@@ -1,0 +1,56 @@
+lounch your lounchfile:
+roslaunch katzenschwanz mylaunch.launch
+
+Install Ros packages with by binary with ($ROS_DISTRO = melodic):
+sudo apt install ros-$ROS_DISTRO-nameofpackage
+
+start Stuff:
+gzclient		Gazebo Gui
+rviz			..rviz
+
+Gazebo sometimes cant close correctly, try:
+killall -9 gzserver
+killall -9 gzclient
+
+Start gmapping to creat a map with laserscanner of robot:
+rosrun gmapping slam_gmapping
+
+Start teleop key controll of robot:
+roslaunch turtlebot3_teleop turtlebot3_teleop_key.launch
+
+Save a generated Map:
+rosrun map_server map_saver -f mymap
+
+Start Pointop for Turtlebot3:
+roslaunch turtlebot3_example turtlebot3_pointop_key.launch
+
+Debugg stuff:
+rosnode info /gazebo
+rqt
+rqt_graph
+rostopic echo /cmd_vel
+
+------------Commands for Soar-------------
+if frontier exploration bugs:
+catkin_make_isolated
+
+start it
+roslaunch project3 myfile.launch 
+
+Bash script random float number:
+awk -v min=0 -v max=6.28 'BEGIN{srand(); print min+rand()*int(1000*(max-min)+1)/1000}'
+
+
+----------------------------------------
+
+
+Open bashrc with nano ~/.bashrc and add stuff like:
+#source your catkin workspace
+source ~/catkin_ws/devel/setup.bash
+#Entkneulbefehl:
+export LC_NUMERIC="en_US.UTF.8"
+#burger as standard model:
+export TURTLEBOT3_MODEL='burger'
+
+
+
