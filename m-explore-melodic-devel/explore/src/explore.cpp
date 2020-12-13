@@ -217,7 +217,32 @@ void Explore::makePlan()
     ROS_INFO("Only blacklisted frontiers");
     ROS_INFO("#");
     ROS_INFO("#");
-    stop();
+    bool reset = false;
+    for(int i=0; i < frontiers.size(); i++){
+      if(frontiers[i].size > 10/costmap2d->getResolution() ||
+      (frontiers[i].centroid.x > 0 && frontiers[i].centroid.x < 1) && (frontiers[i].centroid.y > -6.5 && frontiers[i].centroid.y < -5.5) ||
+      (frontiers[i].centroid.x > -1 && frontiers[i].centroid.x < 0) && (frontiers[i].centroid.y > 5.5 && frontiers[i].centroid.y < 6.5))
+      {
+        ROS_INFO("Sind in der if abfrage drinnen!");
+        // reset = false;
+      }
+      else{
+        ROS_INFO("Sind in der if abfrage drinnen! reset = true");
+        reset = true;
+      }
+    }
+    if(reset == true){
+      frontier_blacklist_.clear();
+      ROS_INFO("Clear it and let's do the shit again! :D");
+      ROS_INFO("Clear it and let's do the shit again! :D");
+      ROS_INFO("Clear it and let's do the shit again! :D");
+      makePlan();
+      return;
+    }
+    else{
+      stop();
+      return;
+    }
     return;
   }
   geometry_msgs::Point target_position = frontier->centroid;
@@ -243,7 +268,7 @@ void Explore::makePlan()
     makePlan();
     return;
   }
-  if (frontier->size > 5/costmap2d->getResolution())
+  if (frontier->size > 10/costmap2d->getResolution())
   {
     frontier_blacklist_.push_back(target_position);
     ROS_INFO("#");
@@ -254,7 +279,7 @@ void Explore::makePlan()
     makePlan();
     return;
   } 
-  if ((target_position.x > 0 || target_position.x < 1) && (target_position.y > -6.5 || target_position.y < -5.5))
+  if ((target_position.x > 0 && target_position.x < 1) && (target_position.y > -6.5 && target_position.y < -5.5))
   {
     frontier_blacklist_.push_back(target_position);
     ROS_INFO("#");
@@ -265,7 +290,7 @@ void Explore::makePlan()
     makePlan();
     return;
   }
-  if ((target_position.x > -1 || target_position.x < 0) && (target_position.y > 5.5 || target_position.y < 6.5))
+  if ((target_position.x > -1 && target_position.x < 0) && (target_position.y > 5.5 && target_position.y < 6.5))
   {
     frontier_blacklist_.push_back(target_position);
     ROS_INFO("#");
