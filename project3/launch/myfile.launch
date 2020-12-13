@@ -23,4 +23,6 @@
 
     <include file="$(find turtlebot3_navigation)/launch/move_base.launch" /> <!-- um Ziele zu setzen. Laden von move base-->
 
+    <node pkg="hector_trajectory_server" type="hector_trajectory_server" name="hector_trajectory_server_thing" output="screen"/>
+
 </launch>
