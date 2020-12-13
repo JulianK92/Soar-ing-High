@@ -243,6 +243,39 @@ void Explore::makePlan()
     makePlan();
     return;
   }
+  if (frontier->size > 5/costmap2d->getResolution())
+  {
+    frontier_blacklist_.push_back(target_position);
+    ROS_INFO("#");
+    ROS_INFO("#");
+    ROS_INFO("   ######################     Frontier to Size to big");
+    ROS_INFO("#");
+    ROS_INFO("#");
+    makePlan();
+    return;
+  } 
+  if ((target_position.x > 0 || target_position.x < 1) && (target_position.y > -6.5 || target_position.y < -5.5))
+  {
+    frontier_blacklist_.push_back(target_position);
+    ROS_INFO("#");
+    ROS_INFO("#");
+    ROS_INFO("   ######################     Frontier was 0.5, -6 exit");
+    ROS_INFO("#");
+    ROS_INFO("#");
+    makePlan();
+    return;
+  }
+  if ((target_position.x > -1 || target_position.x < 0) && (target_position.y > 5.5 || target_position.y < 6.5))
+  {
+    frontier_blacklist_.push_back(target_position);
+    ROS_INFO("#");
+    ROS_INFO("#");
+    ROS_INFO("   ######################     Frontier was -0.5, 6 exit");
+    ROS_INFO("#");
+    ROS_INFO("#");
+    makePlan();
+    return;
+  }
   
   // black list if we've made no progress for a long time
   if (ros::Time::now() - last_progress_ > progress_timeout_) {
