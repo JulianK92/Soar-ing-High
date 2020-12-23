@@ -1,0 +1,64 @@
+<?xml version="1.0" ?>
+<launch>
+    <include file="$(find gazebo_ros)launch/empty_world.launch" >
+        <arg name="world_name" value="$(find project3)/maps/Maze.world" />
+        <arg name="paused" value="false" />
+        <arg name="use_sim_time" value="true" />
+        <arg name="gui" value="false" /> <!-- alternativ "gzclient" in commandline-->
+    </include>
+
+    <include file="$(find turtlebot3_bringup)/launch/turtlebot3_remote.launch"/>
+
+    <param name="robot_description" command="$(find xacro)/xacro --inorder $(find turtlebot3_description)/urdf/turtlebot3_burger_for_autorace.urdf.xacro" />
+    
+    <arg name="my_x"/>
+    <arg name="my_y"/>
+    <arg name="my_Y"/> <!--in Radiant-->
+
+    <node pkg="gazebo_ros" type="spawn_model" name="spawn_urdf" args="-urdf -model turtlebot3_burger -x $(arg my_x) -y $(arg my_y) -z 0 -Y $(arg my_Y) -param robot_description"/>
+
+    <include file="$(find turtlebot3_navigation)/launch/move_base.launch" /> <!-- um Ziele zu setzen. Laden von move base-->
+
+    <node type="rviz" name="rviz" pkg="rviz" args="-d $(find project3)/rviz/rvizsettings.rviz" />
+    <!-- rosrun map_server map_server mymap.yaml -->
+    <node pkg="map_server" type="map_server" name="map_server" args="$(find project3)/maps/mymap.yaml"/>
+
+    <node pkg="amcl" type="amcl" name="amcl">
+        <param name="min_particles"             value="500"/>
+        <param name="max_particles"             value="2000"/>
+        <param name="kld_err"                   value="0.02"/>
+        <param name="update_min_d"              value="0.20"/>
+        <param name="update_min_a"              value="0.20"/>
+        <param name="resample_interval"         value="1"/>
+        <param name="transform_tolerance"       value="0.5"/>
+        <param name="recovery_alpha_slow"       value="0.00"/>
+        <param name="recovery_alpha_fast"       value="0.00"/>
+        <param name="initial_pose_x"            value="$(arg my_x)"/>
+        <param name="initial_pose_y"            value="$(arg my_y)"/>
+        <param name="initial_pose_a"            value="$(arg my_Y)"/>
+        <!-- <param name="initial_cov_xx"            value="6"/>
+        <param name="initial_cov_yy"            value="6"/> -->
+        <param name="gui_publish_rate"          value="50.0"/>
+
+        <remap from="scan"                      to="/scan"/>
+        <param name="laser_max_range"           value="3.5"/>
+        <param name="laser_max_beams"           value="180"/>
+        <param name="laser_z_hit"               value="0.5"/>
+        <param name="laser_z_short"             value="0.05"/>
+        <param name="laser_z_max"               value="0.05"/>
+        <param name="laser_z_rand"              value="0.5"/>
+        <param name="laser_sigma_hit"           value="0.2"/>
+        <param name="laser_lambda_short"        value="0.1"/>
+        <param name="laser_likelihood_max_dist" value="2.0"/>
+        <param name="laser_model_type"          value="likelihood_field"/>
+
+        <param name="odom_model_type"           value="diff"/>
+        <param name="odom_alpha1"               value="0.1"/>
+        <param name="odom_alpha2"               value="0.1"/>
+        <param name="odom_alpha3"               value="0.1"/>
+        <param name="odom_alpha4"               value="0.1"/>
+        <param name="odom_frame_id"             value="odom"/>
+        <param name="base_frame_id"             value="base_footprint"/>
+    </node>
+
+</launch>

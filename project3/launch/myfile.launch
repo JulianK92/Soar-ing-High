@@ -25,4 +25,6 @@
 
     <node pkg="hector_trajectory_server" type="hector_trajectory_server" name="hector_trajectory_server_thing" output="screen"/>
 
+    <!-- m-explore -->
+
 </launch>
