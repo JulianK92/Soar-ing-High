@@ -28,7 +28,7 @@ echo "Endlich an der Reihe"
 # Sobald explore node fertig dann speicher map
 mapname="mymap$1"
 echo "$mapname"
-rosrun map_server map_saver -f $mapname
+rosrun map_server map_saver -f mymap #$mapname
 sleep 5
 echo "becoming a serial killer"
 
@@ -42,8 +42,10 @@ echo "blood everywhere"
 sleep 10
 
 echo "one last launch"
-# danach launche zweites launchfile mit gespeicherter map
-gnome-terminal -e "roslaunch project3 launche_mapped_maze.launch my_x:=$(./rand.sh) my_y:=$(./rand.sh) my_Y:=$(./rand_Y.sh)" &
+# danach launcheeeeee zweites launchfile mit gespeicherter map
+gnome-terminal -e "roslaunch project3 launch_mapped_maze.launch my_x:=$(./rand.sh) my_y:=$(./rand.sh) my_Y:=$(./rand_Y.sh)" &
+
+sleep 5
 
 # publishe das goal am exit
 rostopic pub /move_base_simple/goal geometry_msgs/PoseStamped '{header: {stamp: now, frame_id: "map"}, pose: {position: {x: 0.5, y: -6.0, z: 0.0}, orientation: {w: 1.0}}}'

@@ -21,10 +21,29 @@
 
     <node pkg="gmapping" type="slam_gmapping" name="gmapping_thing" output="screen"/>
 
-    <include file="$(find turtlebot3_navigation)/launch/move_base.launch" /> <!-- um Ziele zu setzen. Laden von move base-->
+    <!-- <include file="$(find turtlebot3_navigation)/launch/move_base.launch" /> --> <!-- um Ziele zu setzen. Laden von move base-->
 
     <node pkg="hector_trajectory_server" type="hector_trajectory_server" name="hector_trajectory_server_thing" output="screen"/>
 
-    <!-- m-explore -->
+  <!-- Arguments -->
+  <arg name="model" default="$(env TURTLEBOT3_MODEL)" doc="model type [burger, waffle, waffle_pi]"/>
+  <arg name="cmd_vel_topic" default="/cmd_vel" />
+  <arg name="odom_topic" default="odom" />
+  <arg name="move_forward_only" default="false"/>
+
+  <!-- move_base -->
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS" />
+    <rosparam file="$(find turtlebot3_navigation)/param/costmap_common_params_$(arg model).yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find project3)/param/costmap_common_params_$(arg model).yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find turtlebot3_navigation)/param/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find turtlebot3_navigation)/param/global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find turtlebot3_navigation)/param/move_base_params.yaml" command="load" />
+    <rosparam file="$(find project3)/param/dwa_local_planner_params_$(arg model).yaml" command="load" />
+    <remap from="cmd_vel" to="$(arg cmd_vel_topic)"/>
+    <remap from="odom" to="$(arg odom_topic)"/>
+    <param name="DWAPlannerROS/min_vel_x" value="0.0" if="$(arg move_forward_only)" />
+    
+  </node>
 
 </launch>

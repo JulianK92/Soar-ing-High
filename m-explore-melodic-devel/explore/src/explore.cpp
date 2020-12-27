@@ -36,7 +36,7 @@
  *********************************************************************/
 
 #include <explore/explore.h>
-
+//#include <random>
 #include <thread>
 
 inline static bool operator==(const geometry_msgs::Point& one,
@@ -176,6 +176,9 @@ void Explore::visualizeFrontiers(
   marker_array_publisher_.publish(markers_msg);
 }
 
+// Counter fuer Explore_Ende
+int count_soar = 0;
+
 void Explore::makePlan()
 {
   costmap_2d::Costmap2D* costmap2d = costmap_client_.getCostmap();  // SOA we copied this to print out frontier size in correct dimension
@@ -191,12 +194,8 @@ void Explore::makePlan()
   }
 
   if (frontiers.empty()) {
-    ROS_INFO("#");
-    ROS_INFO("#");
     ROS_INFO("Frontier list is empty");
-    ROS_INFO("#");
-    ROS_INFO("#");
-    stop();
+    //stop();
     return;
   }
 
@@ -212,12 +211,9 @@ void Explore::makePlan()
                          return goalOnBlacklist(f.centroid);
                        });
   if (frontier == frontiers.end()) {
-    ROS_INFO("#");
-    ROS_INFO("#");
     ROS_INFO("Only blacklisted frontiers");
-    ROS_INFO("#");
-    ROS_INFO("#");
     bool reset = false;
+    
     for(int i=0; i < frontiers.size(); i++){
       if(frontiers[i].size > 10/costmap2d->getResolution() ||
       (frontiers[i].centroid.x > 0 && frontiers[i].centroid.x < 1) && (frontiers[i].centroid.y > -6.5 && frontiers[i].centroid.y < -5.5) ||
@@ -231,11 +227,12 @@ void Explore::makePlan()
         reset = true;
       }
     }
-    if(reset == true){
+    if(reset == true && count_soar < 5){
       frontier_blacklist_.clear();
-      ROS_INFO("Clear it and let's do the shit again! :D");
-      ROS_INFO("Clear it and let's do the shit again! :D");
-      ROS_INFO("Clear it and let's do the shit again! :D");
+      ROS_INFO("Clear it and let's do it again!");
+      count_soar++;
+      ROS_INFO("Abbruch count: ");
+      std::cout << count_soar << std::endl;
       makePlan();
       return;
     }
@@ -256,7 +253,7 @@ void Explore::makePlan()
     prev_distance_ = frontier->min_distance;
   }
   // SOA function to blacklist frontiers out of the maze
-  ROS_INFO("taget_position: x=%f y=%f", target_position.x, target_position.y);
+  ROS_INFO("target_position: x=%f y=%f", target_position.x, target_position.y);
   if (target_position.x > 5.8 || target_position.y > 5.8 || target_position.x < -5.8 || target_position.y < -5.8)
   {
     frontier_blacklist_.push_back(target_position);
@@ -318,6 +315,17 @@ void Explore::makePlan()
   if (same_goal) {
     return;
   }
+
+// Gauss_rauschen
+
+//const double mean = 0.0;
+//const double stddev = 0.1;
+//std::default_random_engine generator;
+
+//std::normal_distribution<double> dist(mean, stddev);
+
+//target_position.x=target_position.x+dist(generator);
+//target_position.y=target_position.y+dist(generator);
 
   // send goal to move_base if we have something new to pursue
   move_base_msgs::MoveBaseGoal goal;
@@ -391,7 +399,7 @@ int main(int argc, char** argv)
 {
   ros::init(argc, argv, "explore");
   if (ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME,
-                                     ros::console::levels::Debug)) {
+                                     ros::console::levels::Info)) { //Debug
     ros::console::notifyLoggerLevelsChanged();
   }
   explore::Explore explore;

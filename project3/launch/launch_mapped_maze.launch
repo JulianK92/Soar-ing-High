@@ -21,7 +21,7 @@
 
     <node type="rviz" name="rviz" pkg="rviz" args="-d $(find project3)/rviz/rvizsettings.rviz" />
     <!-- rosrun map_server map_server mymap.yaml -->
-    <node pkg="map_server" type="map_server" name="map_server" args="$(find project3)/maps/mymap.yaml"/>
+    <node pkg="map_server" type="map_server" name="map_server" args="$(find project3)/launch/mymap.yaml"/> <!--maps -->
 
     <node pkg="amcl" type="amcl" name="amcl">
         <param name="min_particles"             value="500"/>
