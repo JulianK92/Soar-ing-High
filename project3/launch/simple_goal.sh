@@ -16,6 +16,8 @@ sleep 1
 gnome-terminal -e "roslaunch explore_lite explore.launch" 
 
 var=$(rosparam get exploring)
+echo "exploring is set to "
+echo $var
 while $var;
 do
 sleep 10
@@ -23,6 +25,8 @@ rosparam get exploring
 var=$(rosparam get exploring)
 echo "In der Warteschleife!"
 done
+echo "exploring is set to "
+echo $var
 
 echo "Endlich an der Reihe"
 # Sobald explore node fertig dann speicher map
@@ -45,7 +49,7 @@ echo "one last launch"
 # danach launcheeeeee zweites launchfile mit gespeicherter map
 gnome-terminal -e "roslaunch project3 launch_mapped_maze.launch my_x:=$(./rand.sh) my_y:=$(./rand.sh) my_Y:=$(./rand_Y.sh)" &
 
-sleep 5
+sleep 15 
 
 # publishe das goal am exit
 rostopic pub /move_base_simple/goal geometry_msgs/PoseStamped '{header: {stamp: now, frame_id: "map"}, pose: {position: {x: 0.5, y: -6.0, z: 0.0}, orientation: {w: 1.0}}}'

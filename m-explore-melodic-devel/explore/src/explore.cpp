@@ -36,8 +36,11 @@
  *********************************************************************/
 
 #include <explore/explore.h>
-//#include <random>
+#include <random>
 #include <thread>
+
+// Counter fuer Explore_Ende
+int count_soar = 0;
 
 inline static bool operator==(const geometry_msgs::Point& one,
                               const geometry_msgs::Point& two)
@@ -89,6 +92,7 @@ Explore::Explore()
 
 Explore::~Explore()
 {
+  ROS_INFO("In deconstructor!");
   stop();
 }
 
@@ -176,8 +180,7 @@ void Explore::visualizeFrontiers(
   marker_array_publisher_.publish(markers_msg);
 }
 
-// Counter fuer Explore_Ende
-int count_soar = 0;
+
 
 void Explore::makePlan()
 {
@@ -195,7 +198,7 @@ void Explore::makePlan()
 
   if (frontiers.empty()) {
     ROS_INFO("Frontier list is empty");
-    //stop();
+    stop();
     return;
   }
 
@@ -219,7 +222,7 @@ void Explore::makePlan()
       (frontiers[i].centroid.x > 0 && frontiers[i].centroid.x < 1) && (frontiers[i].centroid.y > -6.5 && frontiers[i].centroid.y < -5.5) ||
       (frontiers[i].centroid.x > -1 && frontiers[i].centroid.x < 0) && (frontiers[i].centroid.y > 5.5 && frontiers[i].centroid.y < 6.5))
       {
-        ROS_INFO("Sind in der if abfrage drinnen!");
+        ROS_INFO("Sind in der if abfrage drinnen! Wir Resetten nichtmehr sondern sind fertig!");
         // reset = false;
       }
       else{
@@ -227,7 +230,7 @@ void Explore::makePlan()
         reset = true;
       }
     }
-    if(reset == true && count_soar < 5){
+    if((reset == true) && (count_soar < 5)){
       frontier_blacklist_.clear();
       ROS_INFO("Clear it and let's do it again!");
       count_soar++;
@@ -237,6 +240,8 @@ void Explore::makePlan()
       return;
     }
     else{
+      ROS_INFO("Stop because reset false && cound_soar ");
+      std::cout <<"Reset = "<<reset<<"  |||| count = "<< count_soar << std::endl;
       stop();
       return;
     }
@@ -253,7 +258,6 @@ void Explore::makePlan()
     prev_distance_ = frontier->min_distance;
   }
   // SOA function to blacklist frontiers out of the maze
-  ROS_INFO("target_position: x=%f y=%f", target_position.x, target_position.y);
   if (target_position.x > 5.8 || target_position.y > 5.8 || target_position.x < -5.8 || target_position.y < -5.8)
   {
     frontier_blacklist_.push_back(target_position);
@@ -318,14 +322,18 @@ void Explore::makePlan()
 
 // Gauss_rauschen
 
-//const double mean = 0.0;
-//const double stddev = 0.1;
+const double mean = 0.0;
+const double stddev = 0.05;
 //std::default_random_engine generator;
+std::mt19937 generator(std::random_device{}()); 
 
-//std::normal_distribution<double> dist(mean, stddev);
+std::normal_distribution<double> dist(mean, stddev);
+  ROS_INFO("target_pos: x=%2.3f y=%2.3f", target_position.x, target_position.y);
 
-//target_position.x=target_position.x+dist(generator);
-//target_position.y=target_position.y+dist(generator);
+target_position.x=target_position.x+dist(generator);
+target_position.y=target_position.y+dist(generator);
+  ROS_INFO("target_pos+noise: x=%2.3f y=%2.3f", target_position.x, target_position.y);
+
 
   // send goal to move_base if we have something new to pursue
   move_base_msgs::MoveBaseGoal goal;
