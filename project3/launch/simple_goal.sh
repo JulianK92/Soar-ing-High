@@ -13,7 +13,7 @@ sleep 5
 rosparam set exploring true
 sleep 1
 
-gnome-terminal -e "roslaunch explore_lite explore.launch" 
+gnome-terminal -e "roslaunch project3 explore.launch" 
 
 var=$(rosparam get exploring)
 echo "exploring is set to "
