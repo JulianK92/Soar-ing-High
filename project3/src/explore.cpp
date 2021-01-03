@@ -35,12 +35,59 @@
  *
  *********************************************************************/
 
+/*! \mainpage Project3 SOA
+ *
+ * \section intro_sec Overview
+ *
+ * This Package was created to fullfill the requirements of a specific exercise.
+ * A Turtlebot Burger gets spawned in a labyrinth.
+ * The robot then trys to map the labyrinth with the help of gmapping and explore_lite.
+ * After mapping the labyrinth, the map gets saved. Afterwards, the robot gets spawned 
+ * at a random location and orientation and trys to find the labyrinths exit.
+ *
+ * \section install_sec Installation
+ *
+ * \subsection step1 Step 1: Install other needed packages
+ * - gmapping
+ * - hectorslam
+ * - turtlebot3
+ * - move_base
+ *
+ * \subsection step2 Step 2: Install project3 package
+ * Extract project3 into /src of your catkin workspace
+ *
+ *\subsection step3 Step 3: make the packages
+ * execute catkin_make in the catkin folder
+ *
+ * \section start Starting the package
+ * You can adjust simulationspeed:
+ * edit .../project3/maps/Maze.world and set `real_time_update_rate`. (Default: 1000)
+ * 
+ * The package gets started with a bashfile.
+ * 1. navigate to .../project3/launch
+ * 2. open terminal
+ * 3. set start_project3.sh executeable with `sudo chmod a+rwx "start_project3.sh"`
+ * 4. run it with `./start_project3.sh`
+ *
+ * \section output Expected Output
+ * After starting, the robot can be observed in rviz while it maps the labyrinth.
+ * When fully mapped, the map gets saved into .../project3/launch/mymap.yaml
+ * The programm will shutdown and restart with this map loaded in spawn the robot randomly.
+ * The robot will then get a goal to an exit and try to reach it.
+ *
+ * \section contribution_sec Code Contribution
+ * Our code contribution lies mainly in improvments of the explore.cpp, adjustments of the 
+ * pathplaning parameters and the various bashfiles.
+ *
+ * \section contributers Contributors
+ * Stefan Haberl, Julian Katzenschwanz, Cajetan Koschat, Stephanie Kump
+ */
 #include <explore/explore.h>
 #include <random>
 #include <thread>
 
 // Counter fuer Explore_Ende
-int count_soar = 0;
+int count_soar = 0; /**< Some documentation for count_soar. */
 
 inline static bool operator==(const geometry_msgs::Point& one,
                               const geometry_msgs::Point& two)

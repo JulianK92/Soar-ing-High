@@ -3,10 +3,10 @@
   <name>project3</name>
   <version>2.1.1</version>
 
-  <description>Lightweight frontier-based exploration.</description>
+  <description>Turtlebot autonomous mapping of labyrinth. Based on explore_lite.</description>
 
-  <author email="laeqten@gmail.com">Jiri Horner</author>
-  <maintainer email="laeqten@gmail.com">Jiri Horner</maintainer>
+  <author email="mr19m015@technikum-wien.at">Stefan Haberl, Julian Katzenschwanz, Cajetan Koschat, Stephanie Kump</author>
+  <maintainer email="mr19m015@technikum-wien.at">none</maintainer>
   <license>BSD</license>
   <url>http://wiki.ros.org/explore_lite</url>
 
@@ -15,6 +15,8 @@
   <url>http://ros.org/wiki/explore</url>
   <author>Paul Bovbel</author>
   <url>https://github.com/paulbovbel/frontier_exploration</url>
+  <author>Jiri Horner</author>
+  <url>http://wiki.ros.org/explore_lite</url>
   -->
   <buildtool_depend>catkin</buildtool_depend>
 

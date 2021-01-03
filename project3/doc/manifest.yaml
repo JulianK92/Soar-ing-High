@@ -1,0 +1,26 @@
+actions: []
+authors: Stefan Haberl, Julian Katzenschwanz, Cajetan Koschat, Stephanie Kump <mr19m015@technikum-wien.at>
+brief: ''
+bugtracker: ''
+depends:
+- nav_msgs
+- roslaunch
+- catkin
+- roscpp
+- costmap_2d
+- actionlib_msgs
+- visualization_msgs
+- std_msgs
+- tf
+- geometry_msgs
+- map_msgs
+- move_base_msgs
+- actionlib
+description: Turtlebot autonomous mapping of labyrinth. Based on explore_lite.
+license: BSD
+maintainers: none <mr19m015@technikum-wien.at>
+msgs: []
+package_type: package
+repo_url: ''
+srvs: []
+url: http://wiki.ros.org/explore_lite
