@@ -54,26 +54,33 @@
  * - move_base
  *
  * \subsection step2 Step 2: Install project3 package
- * Extract project3 into /src of your catkin workspace
+ * Extract project3 into \c .../src of your catkin workspace
  *
  *\subsection step3 Step 3: make the packages
- * execute catkin_make in the catkin folder
+ * execute \c catkin_make in the catkin folder
  *
  * \section start Starting the package
  * You can adjust simulationspeed:
- * edit .../project3/maps/Maze.world and set `real_time_update_rate`. (Default: 1000)
+ * edit \c .../project3/maps/Maze.world and set <tt>real_time_update_rate</tt>. (Default: 1000)
  * 
  * The package gets started with a bashfile.
- * 1. navigate to .../project3/launch
+ * 1. navigate to \c .../project3/launch
  * 2. open terminal
- * 3. set start_project3.sh executeable with `sudo chmod a+rwx "start_project3.sh"`
- * 4. run it with `./start_project3.sh`
+ * 3. set \c start_project3.sh executeable with <tt>sudo chmod a+rwx "start_project3.sh"</tt>
+ * 4. run it with \c ./start_project3.sh
  *
  * \section output Expected Output
  * After starting, the robot can be observed in rviz while it maps the labyrinth.
- * When fully mapped, the map gets saved into .../project3/launch/mymap.yaml
+ * When fully mapped, the map gets saved into \c .../project3/launch/mymap.yaml .
  * The programm will shutdown and restart with this map loaded in spawn the robot randomly.
  * The robot will then get a goal to an exit and try to reach it.
+ *
+ * \section Changes Code adjustments in explore.cpp
+ * - Added more blacklisting cases
+ * - Added resets of blacklist to give the robot another chance to explore some frontiers 
+ * - Added gaussian noise to frotier-goals to reduce chance of pathplaning errors 
+ * - Changed frontier cost function to distance based
+ * - Set variable 'exploring' false when mapping is finished
  *
  * \section contribution_sec Code Contribution
  * Our code contribution lies mainly in improvments of the explore.cpp, adjustments of the 
@@ -87,7 +94,7 @@
 #include <thread>
 
 // Counter fuer Explore_Ende
-int count_soar = 0; /**< Some documentation for count_soar. */
+int count_soar = 0; /**< Counts the number of times the blacklist got reset. */
 
 inline static bool operator==(const geometry_msgs::Point& one,
                               const geometry_msgs::Point& two)
